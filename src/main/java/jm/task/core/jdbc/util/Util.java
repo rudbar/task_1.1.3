@@ -16,7 +16,7 @@ import java.util.Properties;
 
 
 public final class Util {
-    private static final String connectionUrl = "jdbc:mysql://localhost:3306/test";
+    private static final String connectionUrl = "jdbc:mysql://localhost:3306/test?useSSL=false";
     private static final String username = "root";
     private static final String password = "1234";
 
@@ -29,9 +29,9 @@ public final class Util {
 
                 Properties settings = new Properties();
                 settings.put(Environment.DRIVER, "com.mysql.cj.jdbc.Driver");
-                settings.put(Environment.URL, "jdbc:mysql://localhost:3306/test?useSSL=false");
-                settings.put(Environment.USER, "root");
-                settings.put(Environment.PASS, "1234");
+                settings.put(Environment.URL, connectionUrl);
+                settings.put(Environment.USER, username);
+                settings.put(Environment.PASS, password);
                 settings.put(Environment.DIALECT, "org.hibernate.dialect.MySQL5Dialect");
                 settings.put(Environment.SHOW_SQL, "true");
                 settings.put(Environment.CURRENT_SESSION_CONTEXT_CLASS, "thread");

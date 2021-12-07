@@ -18,13 +18,12 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void createUsersTable() {
         try (Statement statement = Util.getMysqlConnection().createStatement()) {
-            String sql = "CREATE TABLE IF NOT EXISTS users " +
+            statement.executeUpdate("CREATE TABLE IF NOT EXISTS users " +
                     "(id int NOT NULL AUTO_INCREMENT, " +
                     " name VARCHAR(255), " +
                     " lastName VARCHAR(255), " +
                     "age INTEGER, " +
-                    " PRIMARY KEY (id))";
-            statement.executeUpdate(sql);
+                    " PRIMARY KEY (id))");
             System.out.println("Создали таблицу пользователей в БД...");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -33,8 +32,7 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void dropUsersTable() {
         try (Statement statement = Util.getMysqlConnection().createStatement()) {
-            String sql = "DROP TABLE IF EXISTS users";
-            statement.executeUpdate(sql);
+            statement.executeUpdate("DROP TABLE IF EXISTS users");
             System.out.println("Таблица пользователей удалена из БД...");
         } catch (SQLException | ClassNotFoundException e) {
             e.printStackTrace();
@@ -42,8 +40,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void saveUser(String name, String lastName, byte age) {
-        String sql = "INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)";
-        try (PreparedStatement statement = Util.getMysqlConnection().prepareStatement(sql)) {
+        try (PreparedStatement statement = Util.getMysqlConnection()
+                .prepareStatement("INSERT INTO users (name, lastName, age) VALUES (?, ?, ?)")) {
             statement.setString(1, name);
             statement.setString(2, lastName);
             statement.setByte(3, age);
@@ -55,8 +53,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public void removeUserById(long id) {
-        String sql = "DELETE FROM users WHERE id = ?";
-        try (PreparedStatement statement = Util.getMysqlConnection().prepareStatement(sql)) {
+        try (PreparedStatement statement = Util.getMysqlConnection()
+                .prepareStatement("DELETE FROM users WHERE id = ?")) {
             statement.setLong(1, id);
             statement.executeUpdate();
         } catch (SQLException | ClassNotFoundException e) {
@@ -65,10 +63,8 @@ public class UserDaoJDBCImpl implements UserDao {
     }
 
     public List<User> getAllUsers() throws SQLException, ClassNotFoundException {
-
         Statement statement = Util.getMysqlConnection().createStatement();
-        String sql = "SELECT * FROM users";
-        ResultSet resultSet = statement.executeQuery(sql);
+        ResultSet resultSet = statement.executeQuery("SELECT * FROM users");
         List<User> list = new ArrayList<>();
         while(resultSet.next()) {
             User user = new User(resultSet.getString("name"), resultSet.getString("lastName"), resultSet.getByte("age"));
@@ -82,7 +78,6 @@ public class UserDaoJDBCImpl implements UserDao {
 
     public void cleanUsersTable() throws SQLException, ClassNotFoundException {
         Statement statement = Util.getMysqlConnection().createStatement();
-        String sql = "Truncate table users";
-        statement.execute(sql);
+        statement.execute("Truncate table users");
     }
 }
